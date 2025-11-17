@@ -8,15 +8,15 @@
 11 月 17 日
 -----------
 
-打 `osu! <osu_>`_ 时发现 `osu!lazer <osu_>`_ 在 `Linux <linux_>`_ 上已经支持原始输入了，
-在 `Hyprland <Hyprland_>`_ 中调整鼠标灵敏度对 `osu!`_ 游戏内鼠标灵敏度是没作用的。
+打 `osu! <osu_>`_ 时发现 `osu!lazer <osu_>`_ 在 Linux_ 上已经支持原始输入了，
+在 Hyprland_ 中调整鼠标灵敏度对 `osu!`_ 游戏内鼠标灵敏度是没作用的。
 
 ACM 基地中推荐了一篇关于刷题的 `文章 <https://leetcode.cn/discuss/post/RvFUtj>`_。
 
-今天看了下 `逃离鸭可夫 <duckov_>`_ 的 `创意工坊 <>`_，
+今天看了下 `逃离鸭可夫 <duckov_>`_ 的 `创意工坊 <https://steamcommunity.com/app/3167020/workshop>`_，
 之后去 `SteamDB <https://steamdb.info/app/3167020>`_ 上看了下，
-发现是 `Unity <unity_>`_ 开发的，
+发现是 Unity_ 开发的，
 看来开发时要做到有意识地留下 Mod API（最好开发者自己也用 Mod API 进行开发）。
 我还很好奇这些 Mod 是如何实现资源加载的，想买了 `逃离鸭可夫 <duckov_>`_ 之后装几个 Mod 看看。
 它居然还是 `bilibili <bili_steamdb_>`_ 发行的，
-应该是目前 `bilibili <bili_steamdb_>`_ 在 `Steam <steam_>`_ 上发行的游戏中最成功的。
+应该是目前 `bilibili <bili_steamdb_>`_ 在 Steam_ 上发行的游戏中最成功的。
