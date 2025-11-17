@@ -9,4 +9,4 @@
 打 `osu!`_ 时发现 `osu!lazer <osu!_>`_ 在 Linux_ 上已经支持原始输入了，
 在 Hyprland_ 中调整鼠标灵敏度对 `osu!`_ 游戏内鼠标灵敏度是没作用的。
 
-ACM 基地中推荐了一篇关于刷题的 `文章 <https://leetcode.cn/discuss/post/RvFUtj/>`。
+ACM 基地中推荐了一篇关于刷题的 `文章 <https://leetcode.cn/discuss/post/RvFUtj/>`_。
