@@ -4,3 +4,6 @@
 .. _duckov: https://store.steampowered.com/app/3167020/Escape_From_Duckov
 .. _unity: https://unity.com
 .. _steam: https://store.steampowered.com
+.. _wsl: https://learn.microsoft.com/zh-cn/windows/wsl
+.. _clangd: https://clangd.llvm.org
+.. _ubuntu: http://ubuntu.com
