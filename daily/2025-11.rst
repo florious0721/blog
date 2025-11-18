@@ -20,3 +20,12 @@ ACM 基地中推荐了一篇关于刷题的 `文章 <https://leetcode.cn/discuss
 我还很好奇这些 Mod 是如何实现资源加载的，想买了 `逃离鸭可夫 <duckov_>`_ 之后装几个 Mod 看看。
 它居然还是 `bilibili <bili_steamdb_>`_ 发行的，
 应该是目前 `bilibili <bili_steamdb_>`_ 在 Steam_ 上发行的游戏中最成功的。
+
+11 月 18 日
+-----------
+
+朋友的朋友在 WSL_ 上安装 clangd_ 时报依赖版本错误，
+结果发现是他配置的镜像源版本不对，
+他用的是 Ubuntu_ 24.04 LTS 结果配置了一个 20.04 LTS 的镜像源，
+修正后更新又报了 ``Failed to take /etc/passwd lock: Invalid argument``，
+然后发现是 `WSL1 的问题 <https://www.cnblogs.com/lsgxeva/p/19022732>`_。
