@@ -1,4 +1,3 @@
-.. include:: ../refs.rst
 .. include:: refs.rst
 
 配置环境
@@ -36,4 +35,4 @@ Nez_
 ----
 
 遵循 `官方文档 <nez-fna-setup_>`_，
-克隆仓库后作为项目引用添加到游戏项目中即可。
+克隆仓库后将 :file:`Nez.FNA.Core.csproj` 作为项目引用添加到游戏项目中即可。

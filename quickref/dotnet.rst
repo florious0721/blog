@@ -9,6 +9,14 @@
 
   :samp:`dotnet add reference {FNA.Core.csproj}`
 
+* 添加 DLL 引用
+
+  .. code:: xml
+
+    <ItemGroup>
+      <Reference Inlucde="Example.dll"/>
+    </ItemGroup>
+
 * 构建项目
 
   :samp:`dotnet build {FNA.Core.csproj}`
