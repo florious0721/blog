@@ -7,3 +7,4 @@
 .. _wsl: https://learn.microsoft.com/zh-cn/windows/wsl
 .. _clangd: https://clangd.llvm.org
 .. _ubuntu: http://ubuntu.com
+.. _dotnet: https://dotnet.microsoft.com/en-us/download

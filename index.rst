@@ -6,3 +6,5 @@
 
    algo.rst
    daily/index.rst
+   fna/index.rst
+   quickref/index.rst
