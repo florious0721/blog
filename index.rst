@@ -24,6 +24,7 @@
    csharp/index.rst
    daily/index.rst
    fna/index.rst
+   game/index.rst
    quickref/index.rst
 
 施工中

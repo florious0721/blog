@@ -70,4 +70,8 @@ Nez_ 的 ECS 和 Unity_ 的很像。
 :interface:`IRenderable` 和 :class:`SpriteBatch` 或 :class:`Batcher`
 是理解渲染部分的核心。
 
+FNA_ 中没有 PPU 的概念，默认直接以像素为单位，也无法单独为 :class:`Texture2D` 或 Nez_ 中的 :class:`Sprite` 设置
+缩放，一个良好实践是将 :class:`SpriteRenderer` 放到子 :class:`Entity` 上，在 Unity_ 中也是常见操作。
+这里我借助 PPU 的概念来帮助计算应该如何设置缩放的值。
+
 .. todo:: 补充渲染部分。
