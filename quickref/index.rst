@@ -6,3 +6,4 @@
 
    cmake.rst
    dotnet.rst
+   sphinx.rst

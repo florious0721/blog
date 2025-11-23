@@ -8,3 +8,5 @@
 .. _clangd: https://clangd.llvm.org
 .. _ubuntu: http://ubuntu.com
 .. _dotnet: https://dotnet.microsoft.com/en-us/download
+.. _nvim-lsp: https://github.com/neovim/nvim-lspconfig
+.. _godot: https://godotengine.org
