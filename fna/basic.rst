@@ -63,3 +63,11 @@ Nez_ 的 ECS 和 Unity_ 的很像。
 
 组件基类是没有 :func:`Update()` 的，
 要实现接口 :interface:`IUpdatable` 才会每帧进行更新。
+
+渲染
+----
+
+:interface:`IRenderable` 和 :class:`SpriteBatch` 或 :class:`Batcher`
+是理解渲染部分的核心。
+
+.. todo:: 补充渲染部分。

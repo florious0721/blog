@@ -1,5 +1,5 @@
 # Configuration file for the Sphinx documentation builder.
-#
+
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
@@ -22,7 +22,8 @@ release = datetime.now(timezone.utc).strftime('%Y%m%d')
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'alias'
+    'alias',
+    'sphinx.ext.todo'
 ]
 
 templates_path = ['_templates']
@@ -47,3 +48,6 @@ html_theme_options = {
     'light_css_variables': font_css,
 }
 html_static_path = ['_static']
+
+# -- Options for todolist
+todo_include_todos = True
