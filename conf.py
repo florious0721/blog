@@ -10,11 +10,13 @@ import sys
 from pathlib import Path
 sys.path.append(str((Path(__file__)/'../_ext').resolve()))
 
+from datetime import datetime, timezone
+
 project = 'Florious Blog'
 html_title = project
 copyright = '2025, Florious'
 author = 'Florious'
-release = '0.0.0'
+release = datetime.now(timezone.utc).strftime('%Y%m%d')
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
