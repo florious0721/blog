@@ -21,7 +21,7 @@ csharp-ls_ 的反应不是很快，而且似乎不支持 Godot_ 项目。
 下载语言服务器，解压后确保 :file:`Microsoft.CodeAnalysis.LanguageServer`
 在你的 :envvar:`PATH` 中即可。
 
-`Neovim_ <nvim-lsp-roslyn_>`_ 配置
+`Neovim <nvim-lsp-roslyn_>`_ 配置
 ----------------------------------
 
 在你的 `LSP 配置 <nvim-lsp_>`_ 中添加
