@@ -20,7 +20,7 @@
 .. toctree::
    :maxdepth: 2
 
-   algo.rst
+   algo/index.rst
    csharp/index.rst
    daily/index.rst
    fna/index.rst

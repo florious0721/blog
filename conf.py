@@ -23,7 +23,8 @@ release = datetime.now(timezone.utc).strftime('%Y%m%d')
 
 extensions = [
     'alias',
-    'sphinx.ext.todo'
+    'sphinx.ext.extlinks',
+    'sphinx.ext.todo',
 ]
 
 templates_path = ['_templates']
@@ -48,6 +49,12 @@ html_theme_options = {
     'light_css_variables': font_css,
 }
 html_static_path = ['_static']
+
+# -- Options for extlinks
+extlinks = {
+    'leetcode': ('https://lcid.cc/%s', '力扣 %s'),
+    'luogu': ('https://www.luogu.com.cn/problem/%s', '洛谷 %s'),
+}
 
 # -- Options for todolist
 todo_include_todos = True
