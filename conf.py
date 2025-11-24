@@ -23,6 +23,7 @@ release = datetime.now(timezone.utc).strftime('%Y%m%d')
 
 extensions = [
     'alias',
+    'oi',
     'sphinx.ext.extlinks',
     'sphinx.ext.todo',
 ]
@@ -52,8 +53,8 @@ html_static_path = ['_static']
 
 # -- Options for extlinks
 extlinks = {
-    'leetcode': ('https://lcid.cc/%s', '力扣 %s'),
-    'luogu': ('https://www.luogu.com.cn/problem/%s', '洛谷 %s'),
+    #'leetcode': ('https://lcid.cc/%s', '力扣 %s'),
+    #'luogu': ('https://www.luogu.com.cn/problem/%s', '洛谷 %s'),
 }
 
 # -- Options for todolist

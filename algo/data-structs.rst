@@ -30,8 +30,8 @@
 
 例题
 
-* :ref:`luogu-p1440`
-* :ref:`leetcode-239`
+* :ref:`lgp1440`
+* :ref:`lc239`
 
 
 参见
