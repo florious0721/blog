@@ -1,6 +1,10 @@
 .. include:: ../refs.rst
 
 .. _bili_steamdb: https://steamdb.info/publisher/bilibili
+.. _gtk: https://docs.gtk.org/gtk4/index.html
+.. _curl: https://curl.se/libcurl
+.. _yyjson: https://ibireme.github.io/yyjson
+.. _vocadb: https://vocadb.net
 
 2025 年 11 月
 #############
@@ -29,3 +33,11 @@ ACM 基地中推荐了一篇关于刷题的 `文章 <https://leetcode.cn/discuss
 他用的是 Ubuntu_ 24.04 LTS 结果配置了一个 20.04 LTS 的镜像源，
 修正后更新又报了 ``Failed to take /etc/passwd lock: Invalid argument``，
 然后发现是 `WSL1 的问题 <https://www.cnblogs.com/lsgxeva/p/19022732>`_。
+
+11 月 25 日
+-----------
+
+VocaDB_ 第三方客户端开发中。
+
+gtk_ 还是太超模了，用一套纯 C 的面向对象框架撑起了 GUI 应用开发。
+目前用 curl_ 作为网络库，yyjson_ 作为 json 解析库，体验其实还不错。
