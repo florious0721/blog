@@ -7,3 +7,4 @@
    cmake.rst
    dotnet.rst
    sphinx.rst
+   sql.rst

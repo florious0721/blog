@@ -5,3 +5,4 @@
 
    data-structs.rst
    solutions.rst
+   tricks.rst
