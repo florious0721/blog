@@ -24,7 +24,7 @@ release = datetime.now(timezone.utc).strftime('%Y%m%d')
 extensions = [
     'alias',
     'oi',
-    'sphinx_comments',
+    'kotoba',
     'sphinx.ext.extlinks',
     'sphinx.ext.todo',
 ]
