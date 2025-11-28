@@ -24,6 +24,7 @@ release = datetime.now(timezone.utc).strftime('%Y%m%d')
 extensions = [
     'alias',
     'oi',
+    'sphinx_commnets',
     'sphinx.ext.extlinks',
     'sphinx.ext.todo',
 ]
@@ -50,6 +51,17 @@ html_theme_options = {
     'light_css_variables': font_css,
 }
 html_static_path = ['_static']
+
+# -- Options for comments
+comments_config = {
+    'utterances': {
+        'repo': 'florious0721/blog',
+        'issue-term': 'pathname',
+        'label': 'comment',
+        'theme': 'preferred-color-scheme',
+    }
+}
+
 
 # -- Options for extlinks
 extlinks = {
