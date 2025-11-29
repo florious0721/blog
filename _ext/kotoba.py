@@ -1,1 +1,1 @@
-sphinx-kotoba/sphinx_comments/__init__.py
+sphinx-kotoba/kotoba/__init__.py

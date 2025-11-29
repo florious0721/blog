@@ -53,12 +53,20 @@ html_theme_options = {
 html_static_path = ['_static']
 
 # -- Options for comments
-comments_config = {
-    'utterances': {
-        'repo': 'florious0721/blog',
-        'issue-term': 'pathname',
-        'label': 'comment',
-        'theme': 'preferred-color-scheme',
+kotoba = {
+    'giscus': {
+        'data-repo': 'florious0721/blog',
+        'data-repo-id': 'R_kgDOQXP2nA',
+        'data-category-id': 'DIC_kwDOQXP2nM4CzLoZ',
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'top',
+        'data-theme': 'preferred_color_scheme',
+        'data-lang': 'zh-CN',
+        'data-loading': 'lazy',
+        'crossorigin': 'anonymous',
     }
 }
 
