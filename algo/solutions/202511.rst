@@ -269,7 +269,7 @@ ________
       int query(int left, int right, int value) {
           auto i = m.find(value);
           if (i == m.end()) return 0;
-          auto& v = i->second;
+          auto& v = i->second; // 注意用引用或者指针防止拷贝，不然会超时
 
           auto l = lower_bound(v.begin(), v.end(), left);
           auto r = upper_bound(v.begin(), v.end(), right);
@@ -383,4 +383,146 @@ ________
           puts("YES");
       }
       return 0;
+  }
+
+:luogu:`P5788`
+--------------
+
+  给出项数为 :math:`n` 的整数数列 :math:`a_{1\dots n}`。
+
+  定义函数 :math:`f(i)` 代表数列中第 :math:`i` 个元素之后第一个
+  大于 :math:`a_i` 的元素的 **下标**，即
+  :math:`f(i)=\min_{i<j\leq n,a_j>q_i}\lbrace j\rbrace`。
+  若不存在，则 :math:`f(i) = 0`。
+
+  试求 :math:`f(1\dots n)`。
+
+既然题目名里有单调栈那就先想一想应该构建一个单调递增还是单调递减的栈，
+也就是我们何时能够抛弃一项。对样例 ``1 4 2 3 5``，很容易想到当我们读到
+``4`` 时就可以把第一项 ``1`` 抛弃，也就是说当栈顶比新项小时将栈顶弹出，
+我们要构建一个单调递减的栈。
+
+那么被抛弃的第一项对应的 :math:`f(1)` 又是什么呢？
+就是我们放入的新项的索引 ``2`` （从 1 开始）。
+
+然后答案就出来了：构建一个单调递减的栈。栈顶被弹出时，
+被弹出的项的索引 :math:`i` 对应的 :math:`f(i)` 就是放入的新项的索引。
+
+.. code:: cpp
+
+  #include <stdio.h>
+  typedef unsigned long ulong;
+
+  int a[3000000 + 0x100] = {0};
+  int stack[3000000 + 0x100] = {0};
+  int r[3000000 + 0x100] = {0};
+
+  int main(void) {
+      ulong top = 0;
+
+      ulong n;
+      scanf("%lu", &n);
+      for (ulong i = 1; i <= n; ++i) {
+          int j;
+          scanf("%d", &j);
+          a[i] = j;
+          while (top != 0 && a[stack[top - 1]] < j) r[stack[--top]] = i;
+          stack[top++] = i;
+      }
+      while (top) {
+          r[stack[--top]] = 0;
+      };
+      for (ulong i = 1; i <= n; ++i) {
+          printf("%d ", r[i]);
+      }
+      putchar('\n');
+      return 0;
+  }
+
+:luogu:`P1087`
+--------------
+
+  我们可以把由 0 和 1 组成的字符串分为三类：
+  全 0 串称为 B 串，全 1 串称为 I 串，
+  既含 0 又含 1 的串则称为 F 串。
+
+  FBI 树是一种二叉树，
+  它的结点类型也包括 F 结点，B 结点和 I 结点三种。
+  由一个长度为 :math:`2^N` 的 01 串 :math:`S`
+  可以构造出一棵 FBI 树 :math:`T`，
+  递归的构造方法如下：
+
+  #. :math:`T` 的根节点为 :math:`R`，其类型与串 :math:`S` 的类型相同；
+  #. 若串 :math:`S` 的长度大于 1，将串 :math:`S` 从中间分开，
+     分为等长的左右字串 :math:`S_1` 和 :math:`S_2`；
+     由左子串 :math:`S_1` 构造 :math:`R` 的左子树 :math:`T_1`，
+     由右子串 :math:`S_2` 构造 :math:`R` 的右子树 :math:`T_2`。
+
+  现在给定一个长度为 :math:`2^N` 的 01 串，请用上述构造方法构造出
+  一棵 FBI 树，并输出它的后序遍序序列。
+
+:ref:`binary_tree` 练习题，按定义构建即可。
+
+.. code:: cpp
+
+  #include <stdio.h>
+  #include <ctype.h>
+
+  char str[0x1000] = {0};
+  char tree[0x1000] = {0};
+
+  void buildBI(int idx, int len, char BI) {
+      if (len < 1) return;
+      tree[idx] = BI;
+      if (len <= 1) return;
+      buildBI(idx * 2 + 1, len / 2, BI);
+      buildBI(idx * 2 + 2, len / 2, BI);
+  }
+  void buildU(int idx, char *s, int len) {
+      bool has_zero = false;
+      bool has_one = false;
+      char BI;
+      for (
+          char const *i = s, *end = s + len;
+          i < end; ++i
+      ) {
+          if (has_zero && has_one) break;
+          if (*i == '0') has_zero = true;
+          if (*i == '1') has_one = true;
+      }
+      if (has_zero && has_one) {
+          tree[idx] = 'F';
+          buildU(idx * 2 + 1, s, len / 2);
+          buildU(idx * 2 + 2, s + len / 2, len / 2);
+          return;
+      } else if (has_zero) {
+          BI = 'B';
+      } else if (has_one) {
+          BI = 'I';
+      } else {
+          puts("Unknown error");
+      }
+      tree[idx] = BI;
+      buildBI(idx * 2 + 1, len / 2, BI);
+      buildBI(idx * 2 + 2, len / 2, BI);
+  }
+
+  void postIter(int idx) {
+      if (tree[idx] == 0) return;
+      postIter(idx * 2 + 1);
+      postIter(idx * 2 + 2);
+      putchar(tree[idx]);
+  }
+
+  int main(void) {
+      int N = 0;
+      scanf("%d", &N);
+      char ch;
+      do ch = getchar(); while (isspace(ch));
+      ungetc(ch, stdin);
+      for (int i = 0; i < (1 << N); ++i) {
+          str[i] = getchar();
+      }
+      buildU(0, str, 1 << N);
+      postIter(0);
   }

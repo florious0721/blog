@@ -25,3 +25,50 @@ ____
 `OI Wiki <https://oi-wiki.org/ds/monotonous-queue>`_
 
 `洛谷专栏 <https://www.luogu.com.cn/article/1fiztcrj>`_
+
+.. _binary_tree:
+
+二叉树
+------
+
+数组表示
+________
+
+设根节点在数组中的索引为 ``root``，
+那么左节点索引 ``l = 2 * root + 1``，
+右节点索引 ``r = 2 * root + 2``。
+然后采取一些方式表示叶节点或者空节点即可。
+
+前中后序遍历
+____________
+
+这里的前、中、后指的是何时对当前节点进行操作。
+
+.. code:: cpp
+
+  void preorder(int idx) {
+    // do something to idx
+    prefix(2 * idx + 1);
+    prefix(2 * idx + 2);
+  }
+
+  void inorder(int idx) {
+    infix(2 * idx + 1);
+    // do something to idx
+    infix(2 * idx + 2);
+  }
+
+  void postorder(int idx) {
+    postfix(2 * idx + 1);
+    postfix(2 * idx + 2);
+    // do something to idx
+  }
+
+参见
+____
+
+`Hello 算法 <https://www.hello-algo.com/chapter_tree/binary_tree/>`_
+
+`算法通关手册 <https://algo.itcharge.cn/05_tree/05_01_tree_basic/>`_
+
+`知乎 <https://zhuanlan.zhihu.com/p/687719104>`_
