@@ -1,13 +1,4 @@
-.. include:: ../refs.rst
-
-.. _bili_steamdb: https://steamdb.info/publisher/bilibili
-.. _gtk: https://docs.gtk.org/gtk4/index.html
-.. _curl: https://curl.se/libcurl
-.. _yyjson: https://ibireme.github.io/yyjson
-.. _vocadb: https://vocadb.net
-.. _sakana6875: https://sakana6875.github.io
-.. _giscus: https://giscus.app
-.. _utterances: https://utteranc.es
+.. include:: refs.rst
 
 2025 年 11 月
 #############
@@ -54,3 +45,11 @@ gtk_ 还是太超模了，用一套纯 C 的面向对象框架撑起了 GUI 应�
 已经很久没更新了，连 utterances_ 的支持都成问题，
 于是我 :github:`fork <florious0721/sphinx-kotoba>`
 了之后改了下代码，现在可以使用 giscus_ 提供评论功能了。
+
+11 月 30 日
+-----------
+
+时隔近一个月终于想起还有 Anki_ 没刷，
+记忆保留率 30% 左右，感觉我是 fw。
+
+足立零 VOCALOID 声库明天开始 `众筹 <https://camp-fire.jp/projects/897570/view>`_。
