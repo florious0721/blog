@@ -1,5 +1,5 @@
-题解记录
-########
+2025 年 11 月
+#############
 
 :leetcode:`852`
 ---------------
@@ -225,3 +225,162 @@ ________
 --------------
 
 同 :ref:`lc239` 略。
+
+:leetcode:`2080`
+----------------
+
+  请你设计一个数据结构，它能求出给定子数组内一个给定值的 **频率**。
+  子数组中一个值的 **频率** 指的是这个子数组中这个值的出现次数。
+
+  请你实现 ``RangeFreqQuery`` 类：
+
+  * ``RangeFreqQuery(int[] arr)``
+    用下标从 **0** 开始的整数数组 ``arr`` 构造一个类的实例。
+  * ``int query(int left, int right, int value)``
+    返回子数组 ``arr[left...right]`` 中 ``value`` 的 **频率**。
+
+  一个 **子数组** 指的是数组中一段连续的元素。
+  ``arr[left...right]`` 指的是
+  ``nums`` 中包含下标 ``left`` 和 ``right`` **在内** 的中间一段连续元素。
+
+要查找序列中某区间内某个值出现的次数，
+用暴力方法的话每次查询都要将区间遍历一遍。
+用 :ref:`log_position` 的方法，
+将各个值在序列中出现的位置用数组存储起来，
+那么我们知道 ``left`` 和 ``right`` 在这个位置的数组里的索引之后
+就可以轻松求出出现的次数。
+现在的问题是如何快速地在位置的数组里找到 ``left`` 和 ``right``，
+因为我们是按顺序读取输入的，所以位置数组是有序的，
+可以用二分查找优化。
+
+.. code:: cpp
+
+  class RangeFreqQuery {
+  public:
+      unordered_map<int, vector<int>> m;
+      RangeFreqQuery(vector<int>& arr) {
+          int i = 0;
+          for (auto j: arr) {
+              m[j].push_back(i);
+              ++i;
+          }
+      }
+
+      int query(int left, int right, int value) {
+          auto i = m.find(value);
+          if (i == m.end()) return 0;
+          auto& v = i->second;
+
+          auto l = lower_bound(v.begin(), v.end(), left);
+          auto r = upper_bound(v.begin(), v.end(), right);
+          return r - l;
+      }
+  };
+
+:luogu:`P1449`
+--------------
+
+  所谓后缀表达式是指这样的一个表达式：
+  式中不再引用括号，运算符号放在两个运算对象之后，
+  所有计算按运算符号出现的顺序，
+  严格地由左而右进行（不用考虑运算符的优先级）。
+
+  本题中运算符仅包含 :strong:`+-*/`。
+  保证对于 / 运算除数不为 0。
+  特别地，其中 / 运算的结果需要
+  **向 0 取整** （即与 C++ ``/`` 运算的规则一致）。
+
+  如：``3*(5-2)+7`` 对应的后缀表达式为：``3.5.2.-*7.+@``。
+  在该式中，``@`` 为表达式的结束符号。``.`` 为操作数的结束符号。
+
+因为之前写过一个计算器所以知道要用栈，
+现在我们再思考一下为什么用栈。
+
+表达式中会遇到的记号可以分为两类：操作数 和 运算符。
+后缀表达式中操作数在前，运算符在后，
+我们遇到操作数时并不知道要进行何种运算，
+只能先存储起来；
+如果表达式合法，我们在遇到运算符时
+就要取出最后存进去的一定量的操作数进行运算，
+这就是我们用栈的原因，后进先出。
+
+.. code:: cpp
+
+  #include <ctype.h>
+  #include <stdio.h>
+
+  int stack[0x100] = {0};
+
+  int main(void) {
+      int top = 0;
+      for (;;) {
+          char ch = getchar();
+          if (ch == '@') break;
+          int i;
+          if (isdigit(ch)) {
+              ungetc(ch, stdin);
+              scanf("%d", &i);
+              stack[top++] = i;
+              getchar();
+          } else {
+              int rhs = stack[--top];
+              int lhs = stack[--top];
+              switch (ch) {
+              case '+':
+                  stack[top++] = lhs + rhs;
+                  break;
+              case '-':
+                  stack[top++] = lhs - rhs;
+                  break;
+              case '*':
+                  stack[top++] = lhs * rhs;
+                  break;
+              case '/':
+                  stack[top++] = lhs / rhs;
+                  break;
+              }
+          }
+      }
+      printf("%d\n", stack[--top]);
+  }
+
+:luogu:`P1739`
+--------------
+
+  假设一个表达式有英文字母（小写）、运算符（``+``、``-``、``*``、``/``）
+  和左右小（圆）括号构成，以 ``@`` 作为表达式的结束符。
+  请编写一个程序检查表达式中的左右圆括号是否匹配，若匹配，
+  则输出 ``YES``；否则输出 ``NO``。表达式长度小于 255，左圆括号少于 20 个。
+
+用一个数 ``i`` 记录当前括号深度，
+遇到 ``(`` 时，``i`` 自增；
+遇到 ``)`` 时，``i`` 自减。
+如果遇到 ``)`` 时，``i`` 小于等于 0，输出 ``NO`` 并结束。
+如果扫描完表达式后发现 ``i`` 不等于 0，输出 ``NO`` 并结束；
+否则输出 ``YES``，结束。
+
+.. code:: cpp
+
+   #include <stdio.h>
+
+  int main(void) {
+      int i = 0;
+      char ch = 0;
+      for (;;) {
+          ch = getchar();
+          if (ch == '@') break;
+          else if (ch == '(') ++i;
+          else if (ch == ')') {
+              if (i < 1) {
+                  puts("NO");
+                  return 0;
+              } else --i;
+          }
+      }
+      if (i > 0) {
+          puts("NO");
+      } else {
+          puts("YES");
+      }
+      return 0;
+  }

@@ -73,8 +73,8 @@ kotoba = {
 
 # -- Options for extlinks
 extlinks = {
-    #'leetcode': ('https://lcid.cc/%s', '力扣 %s'),
-    #'luogu': ('https://www.luogu.com.cn/problem/%s', '洛谷 %s'),
+    'github': ('https://github.com/%s', ''),
+    'rtd': ('https://%s.readthedocs.io', '%s 文档'),
 }
 
 # -- Options for todolist

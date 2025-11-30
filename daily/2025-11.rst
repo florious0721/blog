@@ -5,6 +5,9 @@
 .. _curl: https://curl.se/libcurl
 .. _yyjson: https://ibireme.github.io/yyjson
 .. _vocadb: https://vocadb.net
+.. _sakana6875: https://sakana6875.github.io
+.. _giscus: https://giscus.app
+.. _utterances: https://utteranc.es
 
 2025 年 11 月
 #############
@@ -41,3 +44,13 @@ VocaDB_ 第三方客户端开发中。
 
 gtk_ 还是太超模了，用一套纯 C 的面向对象框架撑起了 GUI 应用开发。
 目前用 curl_ 作为网络库，yyjson_ 作为 json 解析库，体验其实还不错。
+
+11 月 29 日
+-----------
+
+建议 `喵波隆 <sakana6875_>`_ 也装上评论，她装了个 giscus_。
+看了之后感觉 giscus_ 要比 utterances_ 好不少，
+但是 :rtd:`sphinx-comments <sphinx-comments>`
+已经很久没更新了，连 utterances_ 的支持都成问题，
+于是我 :github:`fork <florious0721/sphinx-kotoba>`
+了之后改了下代码，现在可以使用 giscus_ 提供评论功能了。
