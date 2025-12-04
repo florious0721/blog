@@ -1,0 +1,81 @@
+2025 年 12 月
+#############
+
+:luogu:`P1030`
+
+  给出一棵二叉树的中序与后序排列。
+  求出它的先序排列。
+  （约定树结点用不同的大写字母表示，
+  且二叉树的节点个数 ≤ 8）。
+
+根据后序排列的定义，
+每棵树后序排列的最后一项一定是这棵树的根，
+问题在于如何确定左子树和右子树。
+我们可以在中序排列中找到树的根，
+中序排列中根的左侧是左子树，右侧是右子树，
+对应地我们可以求出两边子树的项数，
+然后在后序排列中再确定左子树、右子树的根，
+递归直到排列长度为 1 或 0。
+
+.. code:: cpp
+
+  #include <cstdio>
+  #include <ctype.h>
+  char in[0x10] = {0};
+  char post[0x10] = {0};
+  char tree[0x10] = {0};
+  void build(char *cin, char *cpost, int len, int idx) {
+      if (len == 0) return;
+      if (len == 1) {
+          tree[idx] = *cpost;
+          return;
+      }
+      char *lin, *lpost, *rin, *rpost;
+      int llen, rlen;
+
+      char c = cpost[len - 1];
+      for (int i = 0; i < len; ++i) {
+          if (cin[i] == c) {
+              lin = cin;
+              lpost = cpost;
+              llen = i;
+              rin = cin + i + 1;
+              rpost = cpost + i;
+              rlen = len - i - 1;
+              break;
+          }
+      }
+      tree[idx] = c;
+      build(lin, lpost, llen, 2 * idx + 1);
+      build(rin, rpost, rlen, 2 * idx + 2);
+  }
+
+  void pre(int idx) {
+      if (tree[idx] == 0) return;
+      putchar(tree[idx]);
+      pre(2 * idx + 1);
+      pre(2 * idx + 2);
+  }
+
+  int main(void) {
+      char in[0x10] = {0};
+      char post[0x10] = {0};
+      char ch;
+      int i = 0;
+
+      do {
+          ch = getchar();
+          in[i++] = ch;
+      } while (isalpha(ch));
+
+      while (isspace(ch)) ch = getchar();
+
+      i = 0;
+      while (isalpha(ch)) {
+          post[i++] = ch;
+          ch = getchar();
+      }
+
+      build(in, post, i, 0);
+      pre(0);
+  }
