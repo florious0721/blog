@@ -79,3 +79,75 @@
       build(in, post, i, 0);
       pre(0);
   }
+
+:luogu:`P1229`
+--------------
+
+  已知二叉树的前序和后序遍历，求它可能的中序遍历的总数。
+
+前序遍历中当前项的下一项一定是当前项的子节点；
+后序遍历中当前项的前一项一定是当前项的子节点。
+根据这两点我们先确定当前节点是有一个子节点还是两个子节点。
+
+如果有两个子节点，那么当前节点是确定的。
+一定是前序遍历中下一项为左子节点，
+后序遍历中前一项为右子节点，
+可能的中序遍历总数不变。
+我们再在前序和后序遍历中分割出左子树和右子树递归求解即可。
+
+否则当前节点只有一个子节点，它可能是左子节点或右子节点。
+对应地，可能的中序遍历总数乘 2。
+将前序和后序遍历除掉当前项，剩余项都是这一棵子树上的节点，
+递归求解即可。
+
+当节点数小于 2 时结束递归。
+
+
+.. code:: cpp
+
+  #include <cctype>
+  #include <cstdio>
+  void f(char *cpre, char *cpost, int len, int *r) {
+      if (len < 2) return;
+      char lnode = cpre[1];
+      char rnode = cpost[len - 2];
+      if (lnode == rnode) {
+          *r *= 2;
+          f(cpre + 1, cpost, len - 1, r);
+      } else {
+          int i = 0;
+          for (; i < len - 2; ++i) {
+              if (cpost[i] == lnode) break;
+          }
+          int llen = i + 1;
+          int rlen = len - llen - 1;
+          f(cpre + 1, cpost, llen, r);
+          f(cpre + 1 + llen, cpost + llen, rlen, r);
+      }
+  }
+
+  int main(void) {
+      char pre[0x20];
+      char post[0x20];
+      int len = 0;
+      int r = 1;
+
+      char ch = 0;
+      for (;;) {
+          ch = getchar();
+          if (!isalpha(ch)) break;
+          pre[len++] = ch;
+      }
+      len = 0;
+      for (;;) {
+          ch = getchar();
+          if (isalpha(ch)) break;
+      }
+      while (isalpha(ch)) {
+          post[len++] = ch;
+          ch = getchar();
+      }
+      f(pre, post, len, &r);
+      printf("%d\n", r);
+      return 0;
+  }
