@@ -25,6 +25,7 @@
    daily/index.rst
    fna/index.rst
    game/index.rst
+   gtk/basic.rst
    quickref/index.rst
 
 施工中

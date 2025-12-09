@@ -7,3 +7,4 @@ FNA_ 食用记录
 
    intro.rst
    basic.rst
+   platformer.rst
