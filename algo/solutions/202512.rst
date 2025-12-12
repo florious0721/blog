@@ -152,3 +152,235 @@
       printf("%d\n", r);
       return 0;
   }
+
+:luogu:`P1090`
+--------------
+
+凭感觉应该是每次都把最小的两堆合并，
+直到只剩最后一堆为止。
+所以可以使用优先队列。
+
+.. code:: cpp
+
+  #include <cstdio>
+  #include <queue>
+  #include <vector>
+
+  using namespace std;
+  typedef unsigned int uint;
+  int main(void) {
+      priority_queue<uint, vector<uint>, greater<uint>> q;
+      int n = 0;
+      scanf("%d", &n);
+      for (int i = 0; i < n; i++) {
+          uint j = 0;
+          scanf("%u", &j);
+          q.push(j);
+      }
+      uint r = 0;
+      for (;;) {
+          int a = q.top();
+          q.pop();
+          if (q.empty()) {
+              printf("%u", r);
+              return 0;
+          }
+          int b = q.top();
+          q.pop();
+          q.push(a + b);
+          r += a + b;
+      }
+  }
+
+:luogu:`P1168`
+--------------
+
+最理想的条件当然是维护一个有序的序列，
+在每次插入新值时确保插入的位置依然能使序列有序。
+能够维护有序序列的就是堆，但是堆只能取堆顶，
+而这里需要的是中位数。
+于是我们可以用两个堆，分别存储较大的数和较小的数，
+存储较大的数的堆是小顶堆，
+存储较小的数的堆是大顶堆，
+这样我们就能快速取出在插入新值后可能成为新的中位数的值。
+
+对于每个新插入的值，我们取两个堆的堆顶，
+新的中位数一定在这三个值之间，判断出新的中位数后
+再按三个数的大小关系放回堆里即可。
+
+.. code:: cpp
+
+  #include <cstdio>
+  #include <cstdlib>
+  #include <queue>
+  #include <vector>
+  using namespace std;
+  typedef unsigned int uint;
+  int main(void) {
+      priority_queue<uint, vector<uint>> qbig; // 大顶堆，存的数比 mid 小
+      priority_queue<uint, vector<uint>, greater<uint>> qsmall; // 小顶堆，存的数比 mid 大
+      int n = 0;
+      scanf("%d", &n);
+
+      uint j = 0, k = 0;
+      scanf("%u%u", &j, &k);
+      printf("%u\n", j);
+      if (j < k) {
+          qbig.push(j);
+          qsmall.push(k);
+      } else {
+          qbig.push(k);
+          qsmall.push(j);
+      }
+
+      for (int i = 2; i < n; ++i) {
+          uint j = 0;
+          scanf("%u", &j);
+
+          uint l = qbig.top();
+          qbig.pop();
+          uint r = qsmall.top();
+          qsmall.pop();
+          if (r <= j) {
+              // l <= r <= j
+              if (qbig.size() <= qsmall.size()) {
+                  qbig.push(l);
+                  qbig.push(r);
+                  qsmall.push(j);
+              } else {
+                  qbig.push(l);
+                  qsmall.push(r);
+                  qsmall.push(j);
+              }
+          } else if (j <= l) {
+              // j <= l <= r
+              if (qbig.size() <= qsmall.size()) {
+                  qbig.push(j);
+                  qbig.push(l);
+                  qsmall.push(r);
+              } else {
+                  qbig.push(j);
+                  qsmall.push(l);
+                  qsmall.push(r);
+              }
+          } else {
+              // l <= j <= r
+              if (qbig.size() <= qsmall.size()) {
+                  qbig.push(l);
+                  qbig.push(j);
+                  qsmall.push(r);
+              } else {
+                  qbig.push(l);
+                  qsmall.push(j);
+                  qsmall.push(r);
+              }
+          }
+          if (qbig.size() - 1 == qsmall.size()) {
+              printf("%u\n", qbig.top());
+          } else if (qbig.size() != qsmall.size()) {
+              abort();
+          }
+      }
+  }
+
+:luogu:`P1102`
+--------------
+
+和 A+B 一样用哈希表。
+
+哈希表用于存储数列中数的出现次数。
+
+对每个插入的新值，先找找表内是否有符合条件的数，
+如果有那么答案加上已有的符合条件的数的出现次数，
+然后再把新值在表内对应的出现次数 +1。
+
+.. code:: cpp
+
+  #include <cstdio>
+  #include <unordered_map>
+  using namespace std;
+  typedef unsigned long uint;
+  using M = unordered_map<uint, uint>;
+  int main(void) {
+      uint r = 0;
+      uint N, C;
+      M m;
+      scanf("%lu%lu", &N, &C);
+      for (uint i = 0; i < N; ++i) {
+          uint j = 0;
+          scanf("%lu", &j);
+          auto it = m.find(j);
+          if (it == m.end()) m[j] = 1;
+          else it->second++;
+
+          uint k = j + C;
+          it = m.find(k);
+          if (it != m.end()) {
+              r += it->second;
+          }
+          if (j - C > 0) {
+              k = j - C;
+              it = m.find(k);
+              if (it != m.end()) r += it->second;
+          }
+      }
+      printf("%lu", r);
+  }
+
+:luogu:`P2678`
+--------------
+
+最短跳跃距离的最大值满足 :ref:`binary_answer` 条件，
+只要构造用于判断答案是否为可行解的方法即可。
+
+对跳石头的过程进行模拟，
+如果其中一次跳跃的距离小于当前被检验的答案，说明需要移走一块石头，
+进行一次模拟统计需要移走的石头数量，若大于 M 说明答案为不可行解，否则为可行解。
+
+.. code:: cpp
+
+  #include <cstdio>
+  using ui = unsigned int;
+
+  ui distances[50000 + 0x100] = {0};
+
+  static inline bool qualify(ui len, ui mid, ui m) {
+      ui removed = 0;
+      ui now = 0, next = 1;
+      for (; now < len;) {
+          ui d = distances[next] - distances[now];
+          if (d < mid) {
+              removed++;
+              next++;
+          } else {
+              now = next;
+              next++;
+          }
+      }
+      if (removed > m) return false;
+      else return true;
+  }
+
+  int main(void) {
+      ui L, N, M;
+      scanf("%u%u%u", &L, &N, &M);
+      ui i = 1;
+      for (; i <= N; i++) {
+          ui j = 0;
+          scanf("%u", &j);
+          distances[i] = j;
+      }
+      distances[i] = L;
+      ui l = 1, r = L;
+      ui ans = 1;
+      while (l <= r) {
+          ui mid = (l + r) / 2;
+          if (qualify(N + 2, mid, M)) {
+              ans = mid;
+              l = mid + 1;
+          } else {
+              r = mid - 1;
+          }
+      }
+      printf("%u\n", ans);
+  }
