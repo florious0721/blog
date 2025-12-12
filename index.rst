@@ -28,6 +28,8 @@
    gtk/basic.rst
    quickref/index.rst
 
+   misc/index.rst
+
 施工中
 ------
 
