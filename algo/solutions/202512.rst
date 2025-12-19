@@ -384,3 +384,219 @@
       }
       printf("%u\n", ans);
   }
+
+:luogu:`P1883`
+--------------
+
+三分，设左、右边界分别为 l, r，设左、右三分点分别为 limd, rmid。
+若 F(lmid) < F(rmid)，将右边界设为当前的右三分点，
+否则将左边界设为当前的左三分点。
+
+.. code:: cpp
+
+  #include <cstdio>
+  #include <cmath>
+
+  #define EPS 1e-9
+  int abcs[10000 + 0x100][3];
+
+  double f(double x, int n) {
+      double rmax = -INFINITY;
+      for (int i = 0; i < n; i++) {
+          double y = abcs[i][0] * x * x + abcs[i][1] * x + abcs[i][2];
+          rmax = y > rmax ? y : rmax;
+      }
+      return rmax;
+  }
+
+  void algo(void) {
+      int n = 0;
+      scanf("%d", &n);
+      for (int i = 0; i < n; i++) scanf("%d%d%d", abcs[i], abcs[i] + 1, abcs[i] + 2);
+
+      double l = 0., r = 1000.;
+      while (fabs(r - l) > EPS) {
+          double lmid = (l * 2 + r) / 3;
+          double rmid = (l + r * 2) / 3;
+          if (f(lmid, n) < f(rmid, n)) {
+              r = rmid;
+          } else {
+              l = lmid;
+          }
+      }
+      printf("%.4lf\n", f(l, n));
+  }
+
+  int main(void) {
+      int T = 0;
+      scanf("%d", &T);
+      for (int i = 0; i < T; ++i) algo();
+  }
+
+:luogu:`P1093`
+--------------
+
+自定义排序函数即可。
+
+.. code:: cpp
+
+  #include <cstdio>
+  #include <algorithm>
+  #include <vector>
+  using namespace std;
+  typedef struct {
+      int id;
+      int score1;
+      int score2;
+      int score3;
+  } Student;
+
+  bool cmp(Student const& l, Student const &r) {
+      auto ltotal = l.score1 + l.score2 + l.score3;
+      auto rtotal = r.score1 + r.score2 + r.score3;
+      if (ltotal > rtotal) {
+          return true;
+      } else if (ltotal == rtotal) {
+          if (l.score1 > r.score1) {
+              return true;
+          } else if (l.score1 == r.score1) {
+              return l.id < r.id;
+          } else {
+              return false;
+          }
+      } else {
+          return false;
+      }
+  }
+
+
+  int main(void) {
+      vector<Student> v;
+      int n = 0;
+      scanf("%d", &n);
+      v.resize(n + 0x100);
+      for (int i = 0; i < n; i++) {
+          v[i].id = i + 1;
+          scanf("%d%d%d", &v[i].score1, &v[i].score2, &v[i].score3);
+      }
+      sort(v.begin(), v.end(), cmp);
+      for (int i = 0; i < 5; i++) {
+          printf("%d %d\n", v[i].id, v[i].score1 + v[i].score2 + v[i].score3);
+      }
+  }
+
+:leetcode:`274`
+---------------
+
+我的思路是先进行排序，然后从最高引用次数开始递减，
+直到有足够多的论文高于当前引用次数为止。
+看了其他题解才发现排序部分可以用计数排序优化，
+也可以直接用二分答案解。
+
+.. code:: cpp
+
+  class Solution {
+  public:
+      int hIndex(vector<int>& citations) {
+          std::sort(citations.begin(), citations.end(), [](int l, int r) {return l > r;});
+          int h = citations[0];
+          while (h > 0) {
+              bool ok = true;
+              if (citations.size() < h) {
+                  h--;
+                  continue;
+              }
+              for (int i = 0; i < citations.size() && i < h; i++) {
+                  if (citations[i] < h) {
+                      ok = false;
+                      break;
+                  }
+              }
+              if (ok) {
+                  return h;
+              } else h--;
+          }
+          return h;
+      }
+  };
+
+:leetcode:`148`
+---------------
+
+单纯的排序，因为是自定义的链表结构体所以不能直接用标准库。
+排序中简单好用的是快排和归并，因为是链表所以最终选择了归并排序。
+
+.. code:: cpp
+
+  using U = long long int;
+  class Solution {
+  public:
+      ListNode* sortList(ListNode* head) {
+          U len = 0;
+          ListNode *i = head;
+          while (i) {
+              i = i->next;
+              len++;
+          }
+          return mergeSort(head, len);
+      }
+
+      ListNode *mergeSort(ListNode *node, U len) {
+          if (len <= 1) return node;
+          ListNode *it = node;
+          U llen = len / 2;
+          U rlen = len - llen;
+          for (U i = 0; i < llen - 1; i++) {
+              it = it->next;
+          }
+          ListNode *r = it->next;
+          it->next = NULL;
+          ListNode *l = mergeSort(node, llen);
+          r = mergeSort(r, rlen);
+          return merge(l, llen, r, rlen);
+      }
+
+      ListNode *merge(ListNode *l, U llen, ListNode *r, U rlen) {
+          ListNode *head;
+          ListNode *lit = l;
+          ListNode *rit = r;
+          U lc = 0, rc = 0;
+          if (l->val < r->val) {
+              head = l;
+              lit = l->next;
+              lc = 1;
+          } else {
+              head = r;
+              rit = r->next;
+              rc = 1;
+          }
+          ListNode *it = head;
+          for (;;) {
+              if (!(lit || rit)) break;
+              if (!lit) {
+                  it->next = rit;
+                  it = rit;
+                  rit = rit->next;
+                  rc++;
+              } else if (!rit) {
+                  it->next = lit;
+                  it = lit;
+                  lit = lit->next;
+                  lc++;
+              } else {
+                  if (lit->val < rit->val) {
+                      it->next = lit;
+                      it = lit;
+                      lit = lit->next;
+                      lc++;
+                  } else {
+                      it->next = rit;
+                      it = rit;
+                      rit = rit->next;
+                      rc++;
+                  }
+              }
+          }
+          return head;
+      }
+  };
