@@ -1,0 +1,34 @@
+What's My Birthday?
+###################
+
+.. code::
+
+  -----BEGIN PGP MESSAGE-----
+
+  owGbwMvMwCU2ZVbsr41z95xiXPMxiSUtJzE9MyVrjrJCeEZiiXqxQnlRfl66Qnlm
+  SYZCWn5OTn55JpCbnJ+Sas+VpGCrkFRZklqsEW1QYWKpo2BQYWQAIs2NQaSZBZg0
+  BIsYgdmmCDVmLmBxJF1mEDWWCPXmJkjmmCCZhmyXOZIuJPUQWTcwaekGJsFsC5dY
+  Ta6Cosy8Eo0kTa6OUhYGMS4GWTFFlqqaZUyXZq9r85qseQkWJKxMoLBg4OIUgIls
+  3MfIcK14W97VOpdtoUq/t32Y93lay2t/T86TrrLM1VodSbYz+xj+8J485Wlzdlpz
+  27zlc9z0mmT5pgS891LTfdXLOfN7qkQQDwA=
+  =WBMv
+  -----END PGP MESSAGE-----
+
+.. code::
+
+  -----BEGIN PGP PUBLIC KEY BLOCK-----
+
+  mDMEaPmGzxYJKwYBBAHaRw8BAQdADDzUVzwaFhxRghSiEVnnyhrdKfIq+hes95O+
+  /eikD8a0HE5lbW1vIDxuZW1tb21rMkBvdXRsb29rLmNvbT6IlgQTFgoAPgIbAQUL
+  CQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBA10iK1n77lrxDPOPzWMx0avFbP4BQJo
+  +YiIBQkB4TU5AAoJEDWMx0avFbP4JvwBANSlbUk26StK6yyd/NqJimaYtAsye5cS
+  XluHA0pRX57oAP4xkdi3Tot7odcX599XbbhlMNUjttpgSCr9I7dpcrV6A7gzBGj5
+  h4sWCSsGAQQB2kcPAQEHQKvMrPgyq7UJVSy5hYyzZhNXj8DL5ETU51eCxlKrDWCB
+  iPUEGBYKACYWIQQNdIitZ++5a8Qzzj81jMdGrxWz+AUCaPmHiwIbAgUJAeEzgACB
+  CRA1jMdGrxWz+HYgBBkWCgAdFiEEenymAtKbroZKkynSlJpd+rGdvMoFAmj5h4sA
+  CgkQlJpd+rGdvMpgVwEA67ZUvOgm253bRcr6I25jY9ZaBnZstvjnFwYjSt4k0yUB
+  AKxCejkXxno+LmQRfMFS+1g6c4RtgEXEvs0cWqkqAmcLyaoBAKgK33DuHyq3/GMA
+  3CRLi/G84Hs0iGiZxdVQvd4lVVd7AP9Syvm0k1kFb5ZgDxklzckstoHoyVgKpRJb
+  7VIhkMNvDg==
+  =JE+i
+  -----END PGP PUBLIC KEY BLOCK-----
