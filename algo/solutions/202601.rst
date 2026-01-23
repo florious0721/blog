@@ -1,0 +1,374 @@
+2026 年 1 月
+############
+
+:luogu:`P1219`
+--------------
+
+DFS + 回溯。
+一个重要的技巧是不用二维数组表示棋盘，
+而是将 行、列 和 对角线 分别用数组存储，
+可以提高判断和撤回的效率。
+
+.. code:: cpp
+
+  #include <cstdio>
+  char rows[16] = {0}, cols[16] = {0}, bvps[32] = {0}, bvns[32] = {0};
+  int ans[16] = {0};
+  int row = 1;
+  int n = 0;
+  int anscount = 0;
+  bool canplace(int row) {
+      int col = ans[row];
+      int bvp = row + col - 1;
+      int bvn = n - row + col;
+      if (rows[row] || cols[col] || bvps[bvp] || bvns[bvn]) {
+          return false;
+      } else return true;
+  }
+  void place(int row) {
+      int col = ans[row];
+      int bvp = row + col - 1;
+      int bvn = n - row + col;
+      rows[row] = 1;
+      cols[col] = 1;
+      bvps[bvp] = 1;
+      bvns[bvn] = 1;
+  }
+  void drawback(int row) {
+      int col = ans[row];
+      int bvp = row + col - 1;
+      int bvn = n - row + col;
+      rows[row] = 0;
+      cols[col] = 0;
+      bvps[bvp] = 0;
+      bvns[bvn] = 0;
+  }
+
+  int main(void) {
+      scanf("%d", &n);
+
+      int c = 3;
+      int row = 1;
+      ans[row] = 1;
+      for (;;) {
+          if (row == 1 && ans[row] > n) {
+              break;
+          }
+          if (row > n) {
+              if (c-- > 0) {
+                  for (int i = 1; i <= n; i++) {
+                      printf("%d ", ans[i]);
+                  }
+                  putchar('\n');
+              }
+              anscount++;
+              row--;
+              drawback(row);
+              ans[row]++;
+              continue;
+          }
+          if (ans[row] > n) {
+              row--;
+              drawback(row);
+              ans[row]++;
+              continue;
+          }
+          if (canplace(row)) {
+              place(row);
+              row++;
+              ans[row] = 1;
+          } else {
+              ans[row]++;
+          }
+      }
+      printf("%d\n", anscount);
+  }
+
+:luogu:`P1506`
+--------------
+
+bfs 或 dfs 模拟水淹即可，之后再遍历统计没被淹的 ``0``。
+
+.. code:: cpp
+
+  #include <cstdio>
+  #include <cstdlib>
+  #include <queue>
+  #include <cctype>
+
+  int n = 500, m = 500;
+  char map[512][512];
+
+  void dfs(int row, int col) {
+      if (row <= 0 || n < row || col <= 0 || m < col || map[row][col]) {
+          return;
+      }
+      map[row][col] = 1;
+      dfs(row + 1, col);
+      dfs(row - 1, col);
+      dfs(row, col + 1);
+      dfs(row, col - 1);
+  }
+
+  int main(void) {
+      scanf("%d%d", &n, &m);
+      {
+          char c = getchar();
+          while (isspace(c)) c = getchar();
+          ungetc(c, stdin);
+      }
+      for (int i = 1; i <= n; i++) {
+          for (int j = 1; j <= m; j++) {
+              char c = getchar();
+              if (c == '0') {
+                  map[i][j] = 0;
+              } else if (c == '*') {
+                  map[i][j] = 1;
+              } else {
+                  exit(9);
+              }
+          }
+          {
+              char c = getchar();
+              while (isspace(c)) c = getchar();
+              ungetc(c, stdin);
+          }
+      }
+      for (int i = 1; i <= m; i++) {
+          dfs(1, i);
+          dfs(n, i);
+      }
+      for (int i = 1; i <= n; i++) {
+          dfs(i, 1);
+          dfs(i, m);
+      }
+      int ans = 0;
+      for (int i = 1; i <= n; i++) {
+          for (int j = 1; j <= m; j++) {
+              int x = map[i][j];
+              if (x == 0) ans++;
+          }
+      }
+      printf("%d\n", ans);
+  }
+
+:luogu:`P1162`
+--------------
+
+大致与 :ref:`lgp1506` 相同。
+
+.. code:: cpp
+
+  #include <cstdio>
+  #include <queue>
+
+  typedef struct point {
+      int x;
+      int y;
+  } point;
+
+  int n = 32;
+  int map[32][32] = {0};
+
+  int main(void) {
+      scanf("%d", &n);
+      for (int i = 0; i < n; i++) {
+          for (int j = 0; j < n; j++) {
+              scanf("%d", &map[i][j]);
+          }
+      }
+      std::queue<point>q;
+      for (int i = 0; i < n; i++) {
+          q.push(point {0, i});
+          q.push(point {n - 1, i});
+      }
+      for (int i = 1; i < n - 1; i++) {
+          q.push(point {i, 0});
+          q.push(point {i, n - 1});
+      }
+      for (;;) {
+          if (q.empty()) break;
+          point top = q.front();
+          q.pop();
+          if (
+              top.x < 0 || n <= top.x ||
+              top.y < 0 || n <= top.y ||
+              map[top.x][top.y] != 0
+          ) {
+              continue;
+          }
+          map[top.x][top.y] = 3;
+          point l {top.x - 1, top.y};
+          point r {top.x + 1, top.y};
+          point u {top.x, top.y - 1};
+          point d {top.x, top.y + 1};
+          auto list = {l, r, u, d};
+          for (auto i: list) {
+              q.push(i);
+          }
+      }
+      for (int i = 0; i < n; i++) {
+          for (int j = 0; j < n; j++) {
+              int m = map[i][j];
+              printf("%d ", m == 0 ? 2 : m == 1 ? 1 : 0);
+          }
+          putchar('\n');
+      }
+  }
+
+:luogu:`P1649`
+--------------
+
+bfs 寻路，最后选转弯次数最少的即可。
+最短路径未必拐弯最少，所以格子是有可能多次被走过的，
+难点在于在这种情况下如何筛掉无效路径。
+
+一种做法是再开一个二维数组记录到每个格子的最少转弯次数，
+如果走到这个格子发现当前路径的转弯次数大于这个最少转弯次数则剪枝，
+否则更新这个格子的最少转弯次数。
+
+还有就是要注意输入的方式，并非所有测试点都像样例一样是一行之间各个字符用空格隔开。
+
+.. code:: cpp
+
+  #include <cctype>
+  #include <climits>
+  #include <cstdio>
+  #include <queue>
+
+  typedef enum {
+       NONE = -1, UP = 0, DOWN, LEFT, RIGHT,
+  } direction;
+
+  typedef struct {
+      int row;
+      int col;
+      int turns;
+      direction dir;
+  } step;
+
+  char map[128][128] = {0};
+  int count[128][128] = {0};
+  int n = 100;
+  step A = {0}, B = {0};
+
+  int main(void) {
+      std::queue<step> q;
+      scanf("%d", &n);
+      {
+          char c = getchar();
+          while (isspace(c)) c = getchar();
+          ungetc(c, stdin);
+      }
+      for (int i = 0; i < n; i++) {
+          for (int j = 0; j < n; j++) {
+              char c = getchar();
+              while (c != 'A' && c != 'B' && c != '.' && c != 'x') c = getchar();
+              if (c == 'A') {
+                  A.row = i;
+                  A.col = j;
+              } else if (c == 'B') {
+                  B.row = i;
+                  B.col = j;
+              }
+              map[i][j] = c;
+              count[i][j] = INT_MAX;
+          }
+      }
+      A.turns = 0;
+      A.dir = NONE;
+      q.push(A);
+      int ans = INT_MAX;
+      for (;;) {
+          if (q.empty()) break;
+
+          step s = q.front();
+          q.pop();
+          if (s.turns > ans) continue;
+
+          step u = {s.row - 1, s.col, s.turns, UP};
+          step d = {s.row + 1, s.col, s.turns, DOWN};
+          step l = {s.row, s.col - 1, s.turns, LEFT};
+          step r = {s.row, s.col + 1, s.turns, RIGHT};
+          for (auto i: {u, d, l, r}) {
+              if (s.dir != i.dir && s.dir != NONE) i.turns++;
+              if (i.row < 0 || i.row >= n || i.col < 0 || i.col >= n) continue;
+
+              char& c = map[i.row][i.col];
+              int& t = count[i.row][i.col];
+              if ((c == ',' && i.turns > t) || c == 'x') continue;
+              c = ',';
+              t = i.turns < t ? i.turns : t; // ?
+              if (i.row == B.row && i.col == B.col) {
+                  ans = i.turns < ans ? i.turns : ans;
+                  continue;
+              }
+
+              q.push(i);
+          }
+      }
+      if (ans == INT_MAX) printf("-1\n");
+      else printf("%d\n", ans);
+  }
+
+:vjudge:`HDU-1213`
+------------------
+
+并查集，最后统计有多少个根节点即可。
+
+`提交 <https://vjudge.net/solution/67140505/iifjBkHX5yvNvKjSk52K>`_
+
+:luogu:`P2024`
+--------------
+
+用三倍的种类并查集表示捕食和天敌关系即可。
+我是🐖，最后写了个 :code:`animals[find(x+N+N)] = find(y);`，
+看了题解才知道自己哪错了。
+
+.. code:: cpp
+
+  #include <cstdio>
+
+  int animals[100000 * 3 + 0x100];
+  int N = 50000;
+
+  int find(int x) {
+      return animals[x] == x ? x : animals[x] = find(animals[x]);
+  }
+
+  int main(void) {
+      int K = 100000;
+      scanf("%d%d", &N, &K);
+      for (int i = 1; i <= N * 3; i++) {
+          animals[i] = i;
+      }
+      int ans = 0;
+      for (; K > 0; K--) {
+          int s, x, y;
+          scanf("%d%d%d", &s, &x, &y);
+
+          if (x > N || y > N) {
+              ans++;
+              continue;
+          }
+
+          if (s == 1) {
+              if (find(x + N) == find(y) || find(x) == find(y + N)) {
+                  ans++;
+              } else {
+                  animals[find(y)] = find(x);
+                  animals[find(y + N)] = find(x + N);
+                  animals[find(y + N + N)] = find(x + N + N);
+              }
+          } else {
+              if (find(x) == find(y) || find(x) == find(y + N)) {
+                  ans++;
+              } else {
+                  animals[find(x)] = find(y + N + N);
+                  animals[find(x + N)] = find(y);
+                  animals[find(x + N + N)] = find(y + N);
+              }
+          }
+      }
+      printf("%d\n", ans);
+  }
