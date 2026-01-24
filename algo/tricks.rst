@@ -85,3 +85,31 @@
 #. 重复直到左右边界重合或交错。
 
 最优解是最后找到的可行解。
+
+全排列
+------
+
+.. code:: cpp
+
+  #define LEN 3
+  bool used[LEN] = {0};
+  int arr[LEN] = {0};
+
+  void dfs(int n) {
+      if (n == LEN) {
+          int acc = 0;
+          for (int i = 0; i < LEN; i++) {
+              printf("%d ", arr[i]);
+          }
+          putchar('\n');
+          return;
+      }
+      for (int i = 0; i < LEN; i++) {
+          if (!used[i]) {
+              used[i] = true;
+              arr[n] = i;
+              dfs(n + 1);
+              used[i] = false;
+          }
+      }
+  }
