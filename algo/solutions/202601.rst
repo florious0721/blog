@@ -372,3 +372,292 @@ bfs 寻路，最后选转弯次数最少的即可。
       }
       printf("%d\n", ans);
   }
+
+:luogu:`P3369`
+--------------
+
+尝试使用替罪羊树，但最后一个测试点过不了。
+也许是我把重复次数存到节点里导致的。
+
+.. code:: cpp
+
+  #include <array>
+  #include <vector>
+  #include <cstdio>
+  #include <cstdlib>
+  #include <iostream>
+  #include <cctype>
+
+  constexpr double alpha = 0.7;
+
+  struct node {
+      int lc, rc;
+      int capa, len;
+      int val, cnt;
+      bool exists;
+
+      node(): lc(0), rc(0), capa(0), len(0), val(0), cnt(0), exists(false) {}
+
+      void reset() {
+          lc = rc = capa = len = val = cnt = exists = 0;
+      }
+      void set(int v) {
+          lc = rc = 0;
+          val = v;
+          cnt = capa = len = 1;
+          exists = true;
+      }
+  };
+
+  struct tree {
+      std::array<node, 100000 + 0x100>arr;
+      std::vector<int>vec;
+      int acc = 0;
+      int root = 0;
+      tree() = default;
+
+      // node &g(int node) {return arr[node];}
+      node &glc(int nod) {return arr[arr[nod].lc];}
+      node &grc(int nod) {return arr[arr[nod].rc];}
+
+      bool need_rebuild(int nod) {
+          return std::max(
+              glc(nod).capa,
+              grc(nod).capa
+          ) > arr[nod].capa * alpha
+                 || arr[nod].len < arr[nod].capa * alpha;
+      }
+
+      void travel(int nod) {
+          if (!nod) return;
+          travel(arr[nod].lc);
+          if (arr[nod].exists) vec.push_back(nod);
+          travel(arr[nod].rc);
+          if (!arr[nod].exists) arr[nod].reset();
+      }
+
+      int lift(int l, int r) {
+          if (l == r) {
+              int nod = vec[l];
+              node &n = arr[nod];
+              n.lc = n.rc = 0;
+              n.capa = n.len = n.cnt;
+              n.exists = true;
+              return nod;
+          }
+          int m = (l + r) / 2;
+          // while (l < m && arr[vec[m]].val == arr[vec[m - 1]].val) m--;
+          int nod = vec[m];
+          node &n = arr[nod];
+          if (l < m) n.lc = lift(l, m - 1);
+          else n.lc = 0;
+          n.rc = lift(m + 1, r);
+          n.capa = arr[n.lc].capa + arr[n.rc].capa + n.cnt;
+          n.len = arr[n.lc].len + arr[n.rc].len + n.cnt;
+          return nod;
+      }
+
+      int rebuild(int nod) {
+          vec.clear();
+          travel(nod);
+          if (vec.empty()) return 0;
+          return lift(0, vec.size() - 1);
+      }
+
+      void refresh(int nod, int end) {
+          if (!nod) return;
+          if (arr[end].val < arr[nod].val) refresh(arr[nod].lc, end);
+          else refresh(arr[nod].rc, end);
+          node &n = arr[nod];
+          n.capa = arr[n.lc].capa + arr[n.rc].capa + n.cnt;
+          n.len = arr[n.lc].len + arr[n.rc].len + n.cnt;
+      }
+
+      void check(int nod, int end) {
+          if (nod == end) return;
+          if (nod == root) {
+              if (need_rebuild(root)) root = rebuild(root);
+              return;
+          }
+          if (arr[end].val < arr[nod].val) {
+              int olc = arr[nod].lc;
+              if (need_rebuild(olc)) {
+                  arr[nod].lc = rebuild(olc);
+                  refresh(root, arr[nod].lc);
+              } else check(olc, end);
+          } else {
+              int orc = arr[nod].rc;
+              if (need_rebuild(orc)) {
+                  arr[nod].rc = rebuild(orc);
+                  refresh(root, arr[nod].rc);
+              } else check(orc, end);
+          }
+      }
+
+      void insert(int v) {
+          if (!root) {
+              root = ++acc;
+              arr[root].set(v);
+              return;
+          } else return _insert(v, root);
+      }
+
+      void remove(int v) {
+          if (!root) exit(1);
+          _remove(v, root);
+      }
+
+      void _insert(int v, int nod) {
+          node &n = arr[nod];
+          n.capa++;
+          n.len++;
+          if (v == n.val) {
+              n.cnt++;
+              return;
+          } else if (v < n.val) {
+              if (!n.lc) {
+                  n.lc = ++acc;
+                  glc(nod).set(v);
+                  check(root, n.lc);
+                  return;
+              } else return _insert(v, n.lc);
+          } else {
+              if (!n.rc) {
+                  n.rc = ++acc;
+                  grc(nod).set(v);
+                  check(root, n.rc);
+                  return;
+              } else return _insert(v, n.rc);
+          }
+      }
+      void _remove(int v, int nod) {
+          if (!nod) exit(2);
+          node &n = arr[nod];
+          if (v == n.val) {
+              if (n.cnt <= 0) exit(3);
+              if (--n.cnt <= 0) {
+                  n.exists = false;
+              }
+              n.len--;
+              check(root, nod);
+              return;
+          }
+          n.len--;
+          if (v < n.val) _remove(v, n.lc);
+          else _remove(v, n.rc);
+      }
+
+      int getrank(int v) {
+          int nod = root, rank = 1;
+          while (nod) {
+              if (v == arr[nod].val) {
+                  return glc(nod).len + rank;
+              } else if (v < arr[nod].val) {
+                  nod = arr[nod].lc;
+              } else {
+                  rank += arr[nod].cnt + glc(nod).len;
+                  nod = arr[nod].rc;
+              }
+          }
+          return rank;
+      }
+
+      int getval(int rank) {
+          int nod = root;
+          while (nod) {
+              int llen = arr[nod].cnt + glc(nod).len;
+              if (rank <= glc(nod).len) nod = arr[nod].lc;
+              else if (rank <= llen) return arr[nod].val;
+              else {
+                  rank -= llen;
+                  nod = arr[nod].rc;
+              }
+          }
+          exit(4);
+      }
+  };
+
+  void atoi(int &x) {
+      bool neg = false;
+      x = 0;
+      char ch = 0;
+      while (!std::isdigit(ch)) {
+          if (ch == '-') neg = true;
+          ch = getchar();
+      }
+      if (neg) {
+          while (isdigit(ch)) {
+              x = x * 10 + ('0' - ch);
+              ch = getchar();
+          }
+      } else {
+          while (isdigit(ch)) {
+              x = x * 10 + (ch - '0');
+              ch = getchar();
+          }
+      }
+  }
+
+  void itoa(int x) {
+      bool neg = false;
+      if (x < 0) {
+          neg = true;
+          putchar('-');
+      }
+      static int sta[40];
+      int top = 0;
+      do {
+          sta[top++] = x % 10;
+          x /= 10;
+      } while (x);
+      if (neg)
+          while (top) putchar('0' - sta[--top]);
+      else
+          while (top) putchar('0' + sta[--top]);
+  }
+
+  char buf[0x10000];
+
+  int main(void) {
+      std::cin.tie(nullptr);
+      std::ios_base::sync_with_stdio(false);
+
+      tree t;
+      int n;
+      atoi(n);
+      while (n--) {
+          int opt, x, ans;
+          atoi(opt);
+          atoi(x);
+          switch (opt) {
+          case 1:
+              t.insert(x);
+              break;
+          case 2:
+              t.remove(x);
+              break;
+          case 3:
+              ans = t.getrank(x);
+              itoa(ans);
+              putchar('\n');
+              break;
+          case 4:
+              ans = t.getval(x);
+              itoa(ans);
+              putchar('\n');
+              break;
+          case 5:
+              ans = t.getval(t.getrank(x) - 1);
+              itoa(ans);
+              putchar('\n');
+              break;
+          case 6:
+              ans = t.getval(t.getrank(x + 1));
+              itoa(ans);
+              putchar('\n');
+              break;
+          default: return 9;
+          }
+      }
+      return 0;
+  }
