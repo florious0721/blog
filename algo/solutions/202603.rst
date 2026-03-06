@@ -1,0 +1,230 @@
+2026 年 3 月
+############
+
+:luogu:`P2347`
+--------------
+
+用 :class:`std::bitset` 中的一位如果是 ``true`` 就代表可以取到这个重量，
+那么假设有一个 :class:`std::bitset` ``S``，
+添加一个重量为 ``w`` 的砝码则可以表示为 :code:`S |= S << w`。
+
+.. code:: cpp
+
+  #include <bitset>
+  #include <iostream>
+  #include <string>
+  #include <format>
+
+  int main(void) {
+      auto set = std::bitset<1024>{};
+      int w[] = {1, 2, 3, 5, 10, 20, 0, 0};
+      int arr[8] = {0};
+      for (int i = 0; i < 6; i++) {
+          std::cin >> arr[i];
+      }
+      set[0] = true;
+      for (int i = 0; i < 6; i++) {
+          for (int j = 0; j < arr[i]; j++) {
+              set |= set << w[i];
+          }
+      }
+      std::cout << std::format("Total={}\n", set.count() - 1);
+  }
+
+:luogu:`P1962`
+--------------
+
+一般的求法需要 :math:`O(n)` 复杂度。
+但我们可以将斐波那契数列表示为下列矩阵乘法：
+
+.. math::
+
+  \begin{bmatrix}
+    a_n & 0 \\
+    a_{n-1} & 0
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    1 & 1 \\
+    1 & 0
+  \end{bmatrix}
+  \begin{bmatrix}
+    a_{n-1} & 0 \\
+    a_{n-2} & 0
+  \end{bmatrix}
+
+我们对 :math:`\begin{bmatrix} 1 & 1 \\ 1 & 0 \end{bmatrix}` 这个矩阵使用快速幂
+就可以将复杂度降到 :math:`O(\log n)`。
+
+注意矩阵乘法不满足交换律，所以小心别把顺序弄反了。
+
+.. code:: cpp
+
+  #include <iostream>
+  #include <cstring>
+
+  typedef long long I;
+
+  constexpr I mod = 1e9 + 7;
+  using namespace std;
+
+  struct mat {
+      I a[2][2];
+      mat() {memset(a, 0, sizeof a);}
+      mat operator*(mat const& b) const {
+          mat r{};
+          for (int i = 0; i < 2; i++) {
+              for (int j = 0; j < 2; j++) {
+                  for (int k = 0; k < 2; k++) {
+                      r.a[i][j] += a[i][k] * b.a[k][j] % mod;
+                      r.a[i][j] %= mod;
+                  }
+              }
+          }
+          return r;
+      }
+  };
+
+  mat fastpow(mat a, I b) {
+      mat r = a;
+      b--;
+      while (b) {
+          if (b & 1) r = r * a;
+          a = a * a;
+          b >>= 1;
+      }
+      return r;
+  }
+
+  int main(void) {
+      mat base;
+      base.a[0][0] = 1;
+      base.a[0][1] = 1;
+      base.a[1][0] = 1;
+      base.a[1][1] = 0;
+
+      mat ans;
+      ans.a[0][0] = 1;
+      ans.a[1][0] = 1;
+
+      I n;
+      cin >> n;
+      if (n < 3) cout << "1\n";
+      else {
+          mat m = fastpow(base, n - 2);
+          ans = m * ans;
+          cout << ans.a[0][0] << '\n';
+      }
+  }
+
+:luogu:`P1349`
+--------------
+
+同 :ref:`lgp1962`，将变换矩阵改为 :math:`\begin{bmatrix} p & q \\ 1 & 0 \end{bmatrix}` 即可。
+
+.. code:: cpp
+
+  #include <iostream>
+  #include <cstring>
+
+  typedef long long I;
+
+  I mod = 0;
+  using namespace std;
+
+  // 矩阵和快速幂见上，此处略。
+
+  int main(void) {
+      mat base;
+      base.a[0][0] = 1;
+      base.a[0][1] = 1;
+      base.a[1][0] = 1;
+      base.a[1][1] = 0;
+
+      mat ans;
+      ans.a[0][0] = 1;
+      ans.a[1][0] = 1;
+
+      I n = 0;
+      cin >> base.a[0][0] >> base.a[0][1] >> ans.a[1][0] >> ans.a[0][0] >> n >> mod;
+
+      if (n == 1) cout << ans.a[1][0];
+      else if (n == 2) cout << ans.a[0][0];
+      else {
+          cout << (fastpow(base, n - 2) * ans).a[0][0];
+      }
+      cout << '\n';
+  }
+
+:luogu:`P1939`
+--------------
+
+依旧矩阵快速幂，改成三维即可。
+
+.. code:: cpp
+
+  #include <iostream>
+  #include <cstring>
+
+  typedef long long I;
+
+  constexpr I mod = 1e9 + 7;
+  using namespace std;
+
+  struct mat {
+      I a[3][3];
+      mat() {memset(a, 0, sizeof a);}
+      mat operator*(mat const& b) const {
+          mat r{};
+          for (int i = 0; i < 3; i++) {
+              for (int j = 0; j < 3; j++) {
+                  for (int k = 0; k < 3; k++) {
+                      r.a[i][j] += a[i][k] * b.a[k][j] % mod;
+                      r.a[i][j] %= mod;
+                  }
+              }
+          }
+          return r;
+      }
+  };
+
+  mat fastpow(mat a, I b) {
+      mat r = a;
+      b--;
+      while (b) {
+          if (b & 1) r = r * a;
+          a = a * a;
+          b >>= 1;
+      }
+      return r;
+  }
+
+  int main(void) {
+      mat base;
+      base.a[0][0] = 1;
+      // base.a[0][1] = 0;
+      base.a[0][2] = 1;
+      base.a[1][0] = 1;
+      base.a[2][1] = 1;
+
+      mat ans;
+      ans.a[0][0] = 1;
+      ans.a[1][0] = 1;
+      ans.a[2][0] = 1;
+
+      I t = 0, n = 0;
+      // cin >> base.a[0][0] >> base.a[0][1] >> ans.a[1][0] >> ans.a[0][0] >> n >> mod;
+      cin >> t;
+      for (I i = 0; i < t; i++) {
+          cin >> n;
+          if (n == 1) cout << ans.a[2][0];
+          else if (n == 2) cout << ans.a[1][0];
+          else if (n == 3) cout << ans.a[0][0];
+          else {
+              cout << (fastpow(base, n - 3) * ans).a[0][0];
+          }
+          cout << '\n';
+      }
+
+  }
+
